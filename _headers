@@ -1,0 +1,11 @@
+/*.mjs
+  Content-Type: application/javascript; charset=utf-8
+
+/*.wasm
+  Content-Type: application/wasm
+
+/*.onnx
+  Content-Type: application/octet-stream
+
+/models/*
+  Cache-Control: public, max-age=31536000, immutable

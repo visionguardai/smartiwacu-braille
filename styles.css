@@ -1,0 +1,311 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f7fb;
+  --panel: #ffffff;
+  --ink: #172033;
+  --muted: #5f6b7a;
+  --accent: #176d8f;
+  --line: #d9e2ec;
+  --soft: #eaf3f7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px 10px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.topbar p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.status {
+  min-width: 230px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  background: var(--soft);
+  color: #0f526d;
+  font-weight: 700;
+  text-align: right;
+}
+
+.workspace {
+  padding: 0 16px 16px;
+}
+
+.controls,
+.marking {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+label.inline {
+  grid-template-columns: auto 80px;
+  align-items: center;
+}
+
+input,
+select,
+button,
+textarea {
+  font: inherit;
+}
+
+input,
+select {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  padding: 5px 8px;
+}
+
+button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 10px;
+}
+
+.canvas-panel,
+.results {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  min-height: 70vh;
+}
+
+.canvas-panel {
+  overflow: auto;
+}
+
+canvas {
+  display: block;
+  background: #fff;
+}
+
+.results {
+  padding: 12px;
+}
+
+h2 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #0f526d;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 12px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  padding: 8px;
+  background: #fbfdff;
+}
+
+pre {
+  min-height: 140px;
+  max-height: 280px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  background: #fbfdff;
+  padding: 8px;
+  white-space: pre-wrap;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+}
+
+.check input {
+  min-height: auto;
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.collection-panel {
+  margin-top: 12px;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.collection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.paper-gallery {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 320px);
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 2px 14px;
+  scroll-snap-type: x proximity;
+}
+
+.paper-card {
+  scroll-snap-align: start;
+  border: 1px solid var(--line);
+  background: #fbfdff;
+  padding: 10px;
+}
+
+.paper-card img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.paper-card textarea {
+  height: 90px;
+}
+
+.feature-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 16px;
+}
+
+.feature-card label {
+  margin: 10px 0;
+}
+
+.feature-card input,
+.feature-card textarea {
+  width: 100%;
+}
+
+.feature-card textarea {
+  min-height: 120px;
+}
+
+.button-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.button-label input {
+  display: none;
+}
+
+#historyList {
+  max-height: 260px;
+  overflow: auto;
+  padding-left: 24px;
+}
+
+.small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+dialog {
+  width: min(760px, 92vw);
+  border: 0;
+  padding: 20px;
+  box-shadow: 0 20px 80px #0005;
+}
+
+dialog::backdrop {
+  background: #102e3588;
+}
+
+#cameraVideo {
+  width: 100%;
+  max-height: 65vh;
+  background: #111;
+}
+
+@media (max-width: 920px) {
+  .topbar {
+    display: block;
+  }
+
+  .status {
+    margin-top: 10px;
+    text-align: left;
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RATA Braille Recognition</title>
+  <meta name="theme-color" content="#176d8f">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <script src="ort.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>RATA Braille Recognition</h1>
+      <p>Offline ONNX model runner with teacher marking tools</p>
+    </div>
+    <div class="status" id="runtimeStatus">Ready — ONNX only</div>
+  </header>
+
+  <main class="workspace">
+    <section class="controls" aria-label="Recognition controls">
+      <label class="file-picker">
+        <span>Braille image</span>
+        <input id="fileInput" type="file" accept="image/*" multiple>
+      </label>
+      <label class="button-label">Upload Folder
+        <input id="folderInput" type="file" accept="image/*" webkitdirectory directory multiple>
+      </label>
+
+      <label>
+        <span>Language</span>
+        <select id="languageSelect">
+          <option>EN</option>
+          <option>EN2</option>
+          <option>Kinyarwanda</option>
+          <option>French</option>
+          <option>Chinese</option>
+          <option>Spanish</option>
+          <option>Portuguese</option>
+          <option>Swahili</option>
+          <option>Arabic</option>
+          <option>RU</option>
+          <option>DE</option>
+          <option>GR</option>
+          <option>LV</option>
+          <option>PL</option>
+          <option>UZ</option>
+          <option>UZL</option>
+        </select>
+      </label>
+
+      <label class="check"><input id="enhanceImage" type="checkbox"> Enhance image</label>
+      <label class="check"><input id="useSavedRules" type="checkbox"> Use saved rules</label>
+      <label class="check"><input id="showBoxes" type="checkbox" checked> Braille boxes</label>
+      <label><span>Box color</span><input id="boxColor" type="color" value="#1f9d55"></label>
+      <label class="check"><input id="showLabels" type="checkbox" checked> Text labels</label>
+      <label><span>Text placement</span>
+        <select id="labelPlacement">
+          <option value="letter" selected>Under every Braille letter</option>
+          <option value="line">Beginning of each line</option>
+          <option value="word">Beginning of each word</option>
+        </select>
+      </label>
+      <label><span>Text color</span><input id="labelColor" type="color" value="#111111"></label>
+      <label><span>Text size</span><input id="labelSize" type="number" min="8" max="72" value="15"></label>
+      <button id="runButton" class="primary" type="button">Run OCR</button>
+      <button id="runBatch" type="button">Run All Images</button>
+      <button id="openCamera" type="button">Camera</button>
+      <button id="rotateLeft" type="button">90 Left</button>
+      <button id="rotateRight" type="button">90 Right</button>
+      <label class="inline">
+        <span>Angle</span>
+        <input id="angleInput" type="number" min="0" max="360" value="0">
+      </label>
+      <button id="rotateAngle" type="button">Apply</button>
+      <button id="saveImage" type="button">Save PNG</button>
+      <button id="zoomIn" type="button">Zoom In</button>
+      <button id="zoomOut" type="button">Zoom Out</button>
+      <button id="useEditedPaper" type="button">Use Edited Paper for OCR</button>
+    </section>
+
+    <section class="collection-panel">
+      <div>
+        <h2>Paper Collection</h2>
+        <p>Scroll through every processed Braille paper. Results remain available until this page is closed or cleared.</p>
+      </div>
+      <div class="collection-actions">
+        <label><span>Bulk download format</span>
+          <select id="downloadFormat">
+            <option value="combined">Braille + equivalent translation</option>
+            <option value="text">Translated text only</option>
+            <option value="all">Images + Braille + translated text</option>
+          </select>
+        </label>
+        <button id="downloadAll" class="primary" type="button">Download All (.zip)</button>
+        <button id="shareResults" type="button">Share Results</button>
+        <button id="clearCollection" type="button">Clear Papers</button>
+      </div>
+      <div id="paperGallery" class="paper-gallery" aria-live="polite"></div>
+    </section>
+
+    <section class="marking" aria-label="Teacher marking tools">
+      <label>
+        <span>Pen color</span>
+        <select id="penColor">
+          <option value="#d7263d">Red</option>
+          <option value="#176d8f">Blue</option>
+          <option value="#f2c94c">Yellow</option>
+          <option value="#111111">Black</option>
+          <option value="#1f9d55">Green</option>
+          <option value="#7c3aed">Purple</option>
+        </select>
+      </label>
+      <label>
+        <span>Pen size</span>
+        <input id="penSize" type="range" min="1" max="48" value="6">
+      </label>
+      <button id="undoMark" type="button">Undo</button>
+      <button id="redoMark" type="button">Redo</button>
+      <button id="clearMarks" type="button">Clear</button>
+      <label class="inline"><span>Text note</span><input id="noteText" type="text"></label>
+      <label class="check"><input id="noteBold" type="checkbox"> Bold</label>
+      <label class="check"><input id="noteItalic" type="checkbox"> Italic</label>
+      <button id="addNote" type="button">Add Note</button>
+    </section>
+
+    <section class="main-grid">
+      <div class="canvas-panel">
+        <canvas id="paperCanvas" width="960" height="680" aria-label="Braille paper preview"></canvas>
+      </div>
+      <aside class="results">
+        <h2>Translated Text</h2>
+        <textarea id="translatedText" spellcheck="false"></textarea>
+        <div class="result-actions">
+          <button id="translateEdited" type="button">Translate Edited Braille</button>
+          <button id="copyText" type="button">Copy Text</button>
+          <button id="saveText" type="button">Save Text</button>
+        </div>
+        <h2>Untranslated Braille</h2>
+        <textarea id="brailleText" spellcheck="false"></textarea>
+        <div class="result-actions"><button id="saveBraille" type="button">Save Braille</button></div>
+        <h2>Model Output</h2>
+        <pre id="modelInfo"></pre>
+      </aside>
+    </section>
+
+    <section class="feature-grid">
+      <article class="feature-card">
+        <h2>Custom Braille Rules</h2>
+        <label><span>Capital prefixes</span><input id="capitalPrefixes" value="6, 46"></label>
+        <label><span>Number prefixes</span><input id="numberPrefixes" value="3456"></label>
+        <label><span>Single-cell rules (one per line: dots=text)</span><textarea id="singleRules"></textarea></label>
+        <label><span>Sequence rules (one per line: dots dots=text)</span><textarea id="sequenceRules"></textarea></label>
+        <div class="result-actions">
+          <button id="saveRules" class="primary" type="button">Save Rules</button>
+          <button id="resetRules" type="button">Reset English</button>
+          <button id="exportRules" type="button">Export Rules</button>
+          <label class="button-label">Import Rules<input id="importRules" type="file" accept=".json,application/json"></label>
+        </div>
+      </article>
+      <article class="feature-card">
+        <h2>History & Preferences</h2>
+        <p id="batchStatus">No batch running.</p>
+        <ol id="historyList"></ol>
+        <div class="result-actions">
+          <button id="clearHistory" type="button">Clear History</button>
+          <button id="savePreferences" type="button">Save Preferences</button>
+          <button id="resetPreferences" type="button">Reset Preferences</button>
+        </div>
+        <h2>About RATA</h2>
+        <p>Rwanda Assistive Technology Access — empowering accessible education through local assistive technology.</p>
+        <a href="https://www.rata.rw/" target="_blank" rel="noopener">Visit RATA website</a>
+        <p class="small">Model conversion from .t7/.pt to ONNX remains in the desktop Python app. This browser build runs the converted ONNX model only.</p>
+      </article>
+    </section>
+
+    <dialog id="cameraDialog">
+      <h2>Camera Capture</h2>
+      <video id="cameraVideo" autoplay playsinline></video>
+      <div class="result-actions">
+        <button id="captureCamera" class="primary" type="button">Capture</button>
+        <button id="captureAndRun" type="button">Capture & Run OCR</button>
+        <button id="closeCamera" type="button">Close</button>
+      </div>
+      <p>Keep the paper flat, fill the frame, avoid shadows, and hold the camera steady.</p>
+    </dialog>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "RATA Braille Recognition",
+  "short_name": "RATA Braille",
+  "description": "Browser-based ONNX Braille paper recognition and teacher correction tools.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#176d8f"
+}
