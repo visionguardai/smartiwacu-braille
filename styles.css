@@ -9,6 +9,18 @@
   --soft: #eaf3f7;
 }
 
+.site-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.25rem 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.site-footer a {
+  color: #176d8f;
+}
+
 * {
   box-sizing: border-box;
 }
